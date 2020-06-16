@@ -316,6 +316,7 @@ module.exports = function(router) {
             if (req.user) {
               access.roles = _(req.user.roles || [])
                 .filter()
+                .map(util.idToString)
                 .intersection(validRoles)
                 .uniq()
                 .value();
@@ -337,6 +338,10 @@ module.exports = function(router) {
             return callback();
           }
 
+          if (!req.formId || (req.subId && req.url.indexOf('submission') === -1)) {
+            return callback();
+          }
+
           // Does not apply if the user doesn't have any roles.
           const userRoles = _.get(req, 'user.roles', []);
           if (!userRoles.length) {
@@ -352,7 +357,7 @@ module.exports = function(router) {
               return callback(`No Form found with formId: ${req.formId}`);
             }
 
-            // See if any of our components have "defaultPermission" established.
+            // See if any of our components have "submissionAccess" or "defaultPermission" established.
             util.eachComponent(item.components, (component) => {
               if (component.submissionAccess || component.defaultPermission) {
                 // Since the access is now determined by the submission resource access, we
