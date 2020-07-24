@@ -12,7 +12,10 @@ WORKDIR /app
 RUN apk update && \
     apk upgrade && \
     apk add make=4.2.1-r2 && \
+    apk add wget && \
     apk add g++=8.3.0-r0
+
+RUN wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
 
 # Using an alternative package install location
 # to allow overwriting the /app folder at runtime
