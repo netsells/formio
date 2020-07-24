@@ -17,6 +17,9 @@ RUN apk update && \
 
 RUN wget https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem
 
+COPY . .
+RUN npm install
+
 # Using an alternative package install location
 # to allow overwriting the /app folder at runtime
 # stackoverflow.com/a/13021677
@@ -41,8 +44,6 @@ RUN ln -sf $NPM_PACKAGES/node_modules node_modules
 #   DEBUG=formio:db (see index.js for more)
 #   DEBUG=formio:*
 ENV DEBUG=""
-
-COPY . .
 
 # This will initialize the application based on
 # some questions to the user (login email, password, etc.)
